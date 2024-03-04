@@ -1,5 +1,5 @@
 import unittest
-from src.lab1_3_1 import *
+from src.zigzag import *
 
 
 class TestZigzag(unittest.TestCase):
