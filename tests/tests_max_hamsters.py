@@ -1,5 +1,5 @@
 import unittest
-from src.lab2_3_1 import *
+from src.max_hamsters import *
 
 
 class TestMaxHamsters(unittest.TestCase):
