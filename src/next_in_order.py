@@ -7,18 +7,13 @@ class BinaryTree:
 
 
 def find_successor(tree: BinaryTree, node: BinaryTree) -> BinaryTree:
-    result = []
-
-    def inorder_traversal(root):
-        if root is None:
-            return
-        inorder_traversal(root.left)
-        result.append(root)
-        inorder_traversal(root.right)
-    inorder_traversal(tree)
-
-    for i in range(len(result)):
-        if i == len(result) - 1:
-            break
-        elif result[i] == node:
-            return result[i + 1]
+    if node.right:
+        while node.left:
+            node = node.left
+        return node
+    elif node.value > tree.value:
+        return None
+    else:
+        while node.parent.right == node:
+            node = node.parent
+        return node.parent
