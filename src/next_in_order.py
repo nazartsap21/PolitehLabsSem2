@@ -8,9 +8,9 @@ class BinaryTree:
 
 def find_successor(tree: BinaryTree, node: BinaryTree) -> BinaryTree:
     if node.right:
-        while node.left:
-            node = node.left
-        return node
+        while node.right.left:
+            node = node.right
+        return node.right
     elif node.value > tree.value:
         return None
     else:
