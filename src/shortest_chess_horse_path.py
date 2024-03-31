@@ -37,15 +37,17 @@ def find_shortest_chess_horse_path(input_file_path, output_file_path):
 
     while queue:
         vertex = queue.pop(0)
-        if vertex not in visited:
-            if vertex == end_pos:
-                write_output(output_file_path, (dist_to[vertex], get_path(previous_vertex, vertex, start_pos)))
-                break
-            visited.add(vertex)
-            for direction in [(2, -1), (2, 1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]:
-                row, col = vertex[0] + direction[0], vertex[1] + direction[1]
-                if 0 <= row < board_s and 0 <= col < board_s and (row, col) not in visited:
-                    queue.append((row, col))
-                    dist_to[(row, col)] = dist_to[vertex] + 1
-                    previous_vertex[(row, col)] = vertex
+        if vertex in visited:
+            continue
+
+        if vertex == end_pos:
+            write_output(output_file_path, (dist_to[vertex], get_path(previous_vertex, vertex, start_pos)))
+            break
+        visited.add(vertex)
+        for direction in [(2, -1), (2, 1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]:
+            row, col = vertex[0] + direction[0], vertex[1] + direction[1]
+            if 0 <= row < board_s and 0 <= col < board_s and (row, col) not in visited:
+                queue.append((row, col))
+                dist_to[(row, col)] = dist_to[vertex] + 1
+                previous_vertex[(row, col)] = vertex
     return None
