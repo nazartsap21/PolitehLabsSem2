@@ -56,7 +56,7 @@ class AVLTree:
         if root is None:
             return Node(value, priority)
         else:
-            if priority >= root.priority:
+            if priority <= root.priority:
                 root.left = self.insert(root.left, value, priority)
             else:
                 root.right = self.insert(root.right, value, priority)
@@ -65,7 +65,7 @@ class AVLTree:
 
         balance = self.get_balance(root)
         if balance > 1:
-            if priority < root.left.priority:
+            if priority <= root.left.priority:
                 return self.right_rotate(root)
             else:
                 root.left = self.left_rotate(root.left)
@@ -78,6 +78,9 @@ class AVLTree:
                 return self.left_rotate(root)
 
         return root
+
+    def enqueue(self, value, priority):
+        self.root = self.insert(self.root, value, priority)
 
     def delete_highest_priority(self, root):
         if root is None:
@@ -109,3 +112,7 @@ class AVLTree:
                 return self.left_rotate(root), deleted_node
 
         return root, deleted_node
+
+    def deque(self):
+        self.root, deleted_node = self.delete_highest_priority(self.root)
+        return deleted_node
