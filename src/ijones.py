@@ -28,23 +28,40 @@ def read_file(file_path):
     return matrix, dict_of_letters, lines, columns
 
 
-def get_result(matrix, dict_of_letters, rows, columns):
-    result = 0
-    for i in range(rows):
-        queue = [(i, 0)]
-        while queue:
-            row, column = queue.pop(0)
-            if column == columns - 1:
-                if row == 0 or row == rows-1:
-                    result += 1
+def get_answer(matrix, dict_of_letters, lines, columns):
+    letters_on_path = dict()
+    letters_on_path[(0, columns - 1)] = []
+    letters_on_path[(lines - 1, columns - 1)] = []
+    for column in range(columns - 2, -1, -1):
+        for row in range(0, lines):
+            was_in_neighbour = False
+            for neighbour in dict_of_letters[matrix[row][column]]:
+                if neighbour in letters_on_path and neighbour[1] > column:
+                    letters_on_path[neighbour].append((row, column))
+                    letters_on_path[(row, column)] = []
+                if neighbour == (row, column + 1):
+                    was_in_neighbour = True
+
+            if was_in_neighbour or (row, column + 1) not in letters_on_path:
                 continue
+            letters_on_path[(row, column + 1)].append((row, column))
+            letters_on_path[(row, column)] = []
+    return letters_on_path
 
-            for neighbor in dict_of_letters[matrix[row][column]]:
-                if neighbor[1] > column:
-                    queue.append(neighbor)
 
-            if (row, column + 1) not in queue:
-                queue.append((row, column + 1))
+def get_paths(dict_of_paths, lines, columns):
+    stack = [(0, columns - 1)]
+    if lines - 1 != 0:
+        stack.append((lines - 1, columns - 1))
+
+    result = 0
+    while stack:
+        current_row, current_column = stack.pop()
+        if current_column == 0:
+            result += 1
+            continue
+        for neighbour in dict_of_paths[(current_row, current_column)]:
+            stack.append(neighbour)
 
     return result
 
@@ -56,11 +73,7 @@ def write_result(output_file, result):
 
 
 def ijones(input_file, output_file):
-    input_data = read_file(input_file)
-    if input_data == 0:
-        write_result(output_file, 0)
-        return
-
-    ijones_matrix, letters_dict, rows, columns = input_data
-    result = get_result(ijones_matrix, letters_dict, rows, columns)
+    ijones_matrix, letters_dict, lines, cols = read_file(input_file)
+    dict_ijones = get_answer(ijones_matrix, letters_dict, lines, cols)
+    result = get_paths(dict_ijones, lines, cols)
     write_result(output_file, result)
